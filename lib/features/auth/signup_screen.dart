@@ -20,6 +20,10 @@ class _SignupScreenState extends State<SignupScreen> {
   String? passwordError;
   String? confirmError;
 
+  // stroke / button 색상
+  Color strokeColor = const Color(0xFFCCCCCC);
+  Color buttonColor = Colors.black;
+
   bool validate() {
     bool ok = true;
 
@@ -47,6 +51,15 @@ class _SignupScreenState extends State<SignupScreen> {
       confirmError = null;
     }
 
+    // 색상 업데이트
+    if (ok) {
+      strokeColor = const Color(0xFFABC7D0);
+      buttonColor = const Color(0xFFABC7D0);
+    } else {
+      strokeColor = const Color(0xFFFF5558);
+      buttonColor = const Color(0xFFFF5558);
+    }
+
     setState(() {});
     return ok;
   }
@@ -54,50 +67,89 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("회원가입"),
-        centerTitle: true,
-        elevation: 1,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+      backgroundColor: Colors.white,
+      body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AuthTextField(
-              label: "이메일",
-              hint: "example@email.com",
-              controller: email,
-              errorText: emailError,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/images/logo2.png',
+                    width: 56,
+                    height: 56,
+                    fit: BoxFit.cover,
+                  ),
+                  const Spacer(),
+                  const Text(
+                    "회원가입",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
             ),
-            AuthTextField(
-              label: "비밀번호",
-              hint: "6자 이상",
-              obscure: true,
-              controller: password,
-              errorText: passwordError,
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
+                child: Column(
+                  children: [
+                    AuthTextField(
+                      label: "이메일",
+                      hint: "이메일",
+                      controller: email,
+                      errorText: emailError,
+                      borderColor: strokeColor,
+                      errorBorderColor: strokeColor,
+                    ),
+                    AuthTextField(
+                      label: "비밀번호",
+                      hint: "비밀번호",
+                      obscure: true,
+                      controller: password,
+                      errorText: passwordError,
+                      borderColor: strokeColor,
+                      errorBorderColor: strokeColor,
+                    ),
+                    AuthTextField(
+                      label: "비밀번호 확인",
+                      hint: "비밀번호 확인",
+                      obscure: true,
+                      controller: confirm,
+                      errorText: confirmError,
+                      borderColor: strokeColor,
+                      errorBorderColor: strokeColor,
+                    ),
+                  ],
+                ),
+              ),
             ),
-            AuthTextField(
-              label: "비밀번호 확인",
-              hint: "다시 입력",
-              obscure: true,
-              controller: confirm,
-              errorText: confirmError,
-            ),
-
-            const SizedBox(height: 12),
-
-            AuthButton(
-              text: "완료",
-              onPressed: () {
-                if (validate()) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SignupSuccessScreen()),
-                  );
-                }
-              },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+              child: AuthButton(
+                text: "완료",
+                backgroundColor: buttonColor,
+                disabledBackgroundColor: const Color(0xFFE0E0E0),
+                onPressed: () {
+                  if (validate()) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const SignupSuccessScreen(),
+                      ),
+                    );
+                  }
+                },
+              ),
             ),
           ],
         ),

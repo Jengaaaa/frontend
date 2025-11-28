@@ -1,13 +1,25 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/features/auth/login_screen.dart';
 
-class WelcomeScreen extends StatelessWidget {
+const _backgroundColor = Color(0xFFB5D1DA);
+
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
-  static const _backgroundColor = Color(0xFFB5D1DA);
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  Timer? _timer;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: _backgroundColor,
@@ -17,6 +29,22 @@ class WelcomeScreen extends StatelessWidget {
       ),
     );
 
+    _timer = Timer(const Duration(seconds: 3), () {
+      if (!mounted) return;
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _backgroundColor,
       body: SafeArea(
