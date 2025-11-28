@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/common_widgets/primary_button.dart';
 import 'package:frontend/features/auth/widgets/auth_text_field.dart';
-import 'package:frontend/features/auth/widgets/auth_button.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -56,8 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 borderColor: const Color(0xFFB5D1DA),
               ),
               const SizedBox(height: 8),
-              AuthButton(
-                text: "Continue",
+              PrimaryButton(
+                text: "완료",
                 backgroundColor: Colors.black,
                 onPressed: () {
                   // TODO: 로그인 API 연동

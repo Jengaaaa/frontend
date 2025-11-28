@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/common_widgets/primary_button.dart';
 
 class SignupSuccessScreen extends StatelessWidget {
   const SignupSuccessScreen({super.key});
@@ -25,20 +26,10 @@ class SignupSuccessScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 40),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFABC7D0),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("완료"),
-                  ),
+                PrimaryButton(
+                  text: "완료",
+                  backgroundColor: const Color(0xFFABC7D0),
+                  onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),

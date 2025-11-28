@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/common_widgets/primary_button.dart';
 import 'package:frontend/features/auth/widgets/auth_text_field.dart';
-import 'package:frontend/features/auth/widgets/auth_button.dart';
 import 'signup_success_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -135,10 +135,9 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-              child: AuthButton(
+              child: PrimaryButton(
                 text: "완료",
                 backgroundColor: buttonColor,
-                disabledBackgroundColor: const Color(0xFFE0E0E0),
                 onPressed: () {
                   if (validate()) {
                     Navigator.push(

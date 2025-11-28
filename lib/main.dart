@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/welcome_screen.dart';
+import 'package:frontend/features/survey/survey_job_screen.dart';
+import 'package:frontend/features/survey/survey_info_screen.dart';
+import 'package:frontend/features/survey/survey_face_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,11 +32,16 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: const WelcomeScreen(),
-      
+      // home: const WelcomeScreen(),
+      home: const SurveyJobScreen(),
+      routes: {
+        '/survey-job': (context) => const SurveyJobScreen(),
+        '/survey-info': (context) => const SurveyInfoScreen(),
+        '/survey-face': (context) => const SurveyFaceScreen(),
+      },
     );
   }
 }
