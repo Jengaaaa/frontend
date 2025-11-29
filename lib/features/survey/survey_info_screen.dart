@@ -144,7 +144,7 @@ class _SurveyInfoScreenState extends State<SurveyInfoScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 18),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
             title,
@@ -154,29 +154,32 @@ class _SurveyInfoScreenState extends State<SurveyInfoScreen> {
               fontWeight: FontWeight.w700,
             ),
           ),
-          Container(
-            width: 160,
-            height: 48,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF4F4F4),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: value,
-                items: items
-                    .map(
-                      (item) => DropdownMenuItem(
-                        value: item,
-                        child: _HoverableDropdownItem(
-                          text: item,
-                          hoverColor: titleColor.withOpacity(0.1),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Container(
+              height: 48,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF4F4F4),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: value,
+                  items: items
+                      .map(
+                        (item) => DropdownMenuItem(
+                          value: item,
+                          child: _HoverableDropdownItem(
+                            text: item,
+                            hoverColor: titleColor.withOpacity(0.1),
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
-                onChanged: onChanged,
+                      )
+                      .toList(),
+                  onChanged: onChanged,
+                ),
               ),
             ),
           ),
@@ -206,7 +209,14 @@ class _HoverableDropdownItemState extends State<_HoverableDropdownItem> {
       onExit: (_) => setState(() => _isHovered = false),
       child: Container(
         color: _isHovered ? widget.hoverColor : Colors.transparent,
-        child: Text(widget.text),
+        child: Text(
+          widget.text,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontWeight: _isHovered ? FontWeight.w600 : FontWeight.normal,
+            color: _isHovered ? Colors.black : Colors.black87,
+          ),
+        ),
       ),
     );
   }
