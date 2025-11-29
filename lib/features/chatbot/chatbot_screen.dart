@@ -12,27 +12,34 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   int selectedCategory = 0;
   final TextEditingController messageController = TextEditingController();
 
-  // 샘플 대화 (디자인 기반)
-  final List<Map<String, dynamic>> messages = [
-    {
-      "type": "user",
-      "text": "요즘 잠이 잘 안 오고 자꾸 출동 생각이 나요."
-    },
-    {
-      "type": "bot",
-      "text":
-          "지금 약간의 불안감을 느끼고 계신 것 같아요.\n최근 출동과 관련된 기억이 자주 떠오르시나요?\n필요하다면 심리 안정 루틴을 함께 해볼까요?"
-    },
-    {
-      "type": "user",
-      "text": "네, 자꾸 그 장면이 생각나서 잠들기 전에도 힘들어요."
-    },
-    {
-      "type": "bot",
-      "text":
-          "그 기억이 반복되면 몸이 계속 긴장 상태일 수 있어요.\n지금 바로 짧은 호흡 안정 루틴을 함께 해볼까요?"
-    },
+  final List<Map<String, String>> _messages = [
+    {"type": "bot", "text": "안녕하세요. 어떤 이야기를 나눌까요?"},
   ];
+
+  final List<String> _categories = ["스트레스 해소법", "수면 개선", "감정 일기"];
+
+  final Map<String, String> _categoryResponses = {
+    "스트레스 해소법": [
+      "최근 스트레스 지수가 0.63으로 조금 높네요.",
+      "최근 감정 일기에서도 ‘불안’이 자주 보였어요.",
+      "짧은 호흡법(4초 들숨 / 6초 날숨)을 3회 반복해보세요.",
+      "몸의 긴장도를 빠르게 낮춰주는 데 도움이 돼요.",
+      "원하면 간단한 이완 명상도 추천해드릴게요.",
+    ].join("\n\n"),
+    "수면 개선": [
+      "지난 며칠 평균 수면이 5시간대로 짧아져 있어요.",
+      "깊은 수면 비율도 조금 낮네요.",
+      "잠들기 전에 5분 정도 가벼운 스트레칭이나",
+      "짧은 호흡 안정 루틴을 해보면 수면 진입이 빨라집니다.",
+      "필요하시면 수면 유도 음원도 추천드릴게요.",
+    ].join("\n\n"),
+    "감정 일기": [
+      "최근 일기에서 ‘피곤함’, ‘불안’이 자주 보였어요.",
+      "오늘도 비슷한 감정이 드셨나요?",
+      "오늘 느낀 감정 한 줄, 그리고 그 감정을 만든 이유 한 줄만 적어보면 좋습니다.",
+      "작성하면 패턴 분석에 도움이 돼요.",
+    ].join("\n\n"),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -40,19 +47,26 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       backgroundColor: Colors.grey.shade100,
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildAppBar(),
-            _buildTitle(),
-
-            const SizedBox(height: 10),
-            _buildCategoryTabs(),
-
-            const SizedBox(height: 20),
-
-            // 채팅 리스트
-            Expanded(child: _buildChatList()),
-
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildAppBar(),
+                      _buildTitle(),
+                      const SizedBox(height: 10),
+                      _buildCategoryTabs(),
+                      const SizedBox(height: 20),
+                      _buildChatList(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             _buildMessageInput(),
           ],
         ),
@@ -65,16 +79,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   // 🔵 App Bar
   // ---------------------------------
   Widget _buildAppBar() {
-    return Row(
-      children: [
-        IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        const Spacer(),
-        const Icon(Icons.more_horiz),
-      ],
-    );
+    return const Row(children: [Spacer(), Icon(Icons.more_horiz)]);
   }
 
   // ---------------------------------
@@ -94,27 +99,23 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   // 🔵 카테고리 탭
   // ---------------------------------
   Widget _buildCategoryTabs() {
-    final List<String> categories = ["스트레스 해소법", "수면 개선", "감정 일기"];
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(categories.length, (i) {
+        children: List.generate(_categories.length, (i) {
+          final isSelected = selectedCategory == i;
           return GestureDetector(
-            onTap: () => setState(() => selectedCategory = i),
+            onTap: () => _handleCategoryTap(i),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
               decoration: BoxDecoration(
-                color: selectedCategory == i
+                color: isSelected
                     ? Colors.blueGrey.shade300
                     : Colors.blueGrey.shade200,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Text(
-                categories[i],
-                style: const TextStyle(fontSize: 14),
-              ),
+              child: Text(_categories[i], style: const TextStyle(fontSize: 14)),
             ),
           );
         }),
@@ -128,13 +129,14 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   Widget _buildChatList() {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      itemCount: messages.length,
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: _messages.length,
       itemBuilder: (context, index) {
-        final msg = messages[index];
-
+        final msg = _messages[index];
         return msg["type"] == "user"
-            ? _userChatBubble(msg["text"])
-            : _botChatBubble(msg["text"]);
+            ? _userChatBubble(msg["text"]!)
+            : _botChatBubble(msg["text"]!);
       },
     );
   }
@@ -150,47 +152,27 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
           color: Colors.blueGrey.shade200,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(fontSize: 15),
-        ),
+        child: Text(text, style: const TextStyle(fontSize: 15)),
       ),
     );
   }
 
   // 🔹 챗봇 말풍선
   Widget _botChatBubble(String text) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 챗봇 아이콘
-        Container(
-          margin: const EdgeInsets.only(top: 6),
-          child: Image.asset(
-            "assets/images/bot_icon.png",
-            width: 38,
-            height: 38,
-          ),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6),
+          ],
         ),
-
-        const SizedBox(width: 10),
-
-        // 말풍선
-        Flexible(
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              text,
-              style: const TextStyle(fontSize: 15),
-            ),
-          ),
-        ),
-      ],
+        child: Text(text, style: const TextStyle(fontSize: 15)),
+      ),
     );
   }
 
@@ -199,28 +181,76 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   // ---------------------------------
   Widget _buildMessageInput() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: TextField(
-          controller: messageController,
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-            hintText: "메시지를 입력하세요",
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -4),
           ),
-          onSubmitted: (text) {
-            if (text.trim().isEmpty) return;
-            setState(() {
-              messages.add({"type": "user", "text": text});
-              messageController.clear();
-            });
-          },
-        ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: messageController,
+              decoration: InputDecoration(
+                hintText: "메시지를 입력하세요",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
+              ),
+              onSubmitted: (_) => _sendMessage(),
+            ),
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: _sendMessage,
+            child: CircleAvatar(
+              radius: 22,
+              backgroundColor: Colors.blueGrey,
+              child: const Icon(Icons.arrow_upward, color: Colors.white),
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  void _handleCategoryTap(int index) {
+    setState(() {
+      selectedCategory = index;
+      final category = _categories[index];
+      _messages.add({"type": "user", "text": category});
+      _messages.add({
+        "type": "bot",
+        "text": _categoryResponses[category] ?? "그 주제에 대해 더 이야기해볼까요?",
+      });
+    });
+  }
+
+  void _sendMessage() {
+    final text = messageController.text.trim();
+    if (text.isEmpty) return;
+
+    setState(() {
+      _messages.add({"type": "user", "text": text});
+      _messages.add({
+        "type": "bot",
+        "text": "말씀해주신 내용을 잘 들었습니다. 조금 더 자세히 듣고 도와드릴게요.",
+      });
+      messageController.clear();
+    });
   }
 }

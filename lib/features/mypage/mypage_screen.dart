@@ -23,6 +23,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
       backgroundColor: Colors.grey.shade100,
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -46,16 +47,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
   // 🔵 AppBar
   // -------------------------------
   Widget _buildAppBar() {
-    return Row(
-      children: [
-        IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        const Spacer(),
-        const Icon(Icons.more_horiz),
-      ],
-    );
+    return const Row(children: [Spacer(), Icon(Icons.more_horiz)]);
   }
 
   // -------------------------------

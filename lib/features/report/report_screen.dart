@@ -16,31 +16,24 @@ class _ReportScreenState extends State<ReportScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildAppBar(),
-
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildAlertCard(),
-                    const SizedBox(height: 16),
-                    _buildTabs(),
-                    const SizedBox(height: 20),
-
-                    // 그래프/내용
-                    _buildGraphContent(),
-
-                    const SizedBox(height: 30),
-                    _buildCounselRecord(),
-                    const SizedBox(height: 30),
-                  ],
-                ),
-              ),
-            ),
-          ],
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildAppBar(),
+              const SizedBox(height: 16),
+              _buildAlertCard(),
+              const SizedBox(height: 16),
+              _buildCounselRecord(),
+              const SizedBox(height: 16),
+              _buildTabs(),
+              const SizedBox(height: 20),
+              _buildGraphContent(),
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: const BottomNav(currentIndex: 1),
@@ -51,18 +44,9 @@ class _ReportScreenState extends State<ReportScreen> {
   // 🔵 AppBar
   // -----------------------------
   Widget _buildAppBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
-          ),
-          const Spacer(),
-          const Icon(Icons.more_horiz),
-        ],
-      ),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(children: [Spacer(), Icon(Icons.more_horiz)]),
     );
   }
 
@@ -70,24 +54,29 @@ class _ReportScreenState extends State<ReportScreen> {
   // 🔵 주의 단계 카드
   // -----------------------------
   Widget _buildAlertCard() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.blueGrey.shade100,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("주의 단계 0.63",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          SizedBox(height: 6),
-          Text("+0.12 지난주보다 증가했어요"),
-          SizedBox(height: 20),
-          Text("최근 스트레스 지수가 높아요"),
-          Text("수면시간이 평균보다 1시간 짧아요"),
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.blueGrey.shade100,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "주의 단계 0.63",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 6),
+            Text("+0.12 지난주보다 증가했어요"),
+            SizedBox(height: 20),
+            Text("최근 스트레스 지수가 높아요"),
+            Text("수면시간이 평균보다 1시간 짧아요"),
+          ],
+        ),
       ),
     );
   }
@@ -160,8 +149,10 @@ class _ReportScreenState extends State<ReportScreen> {
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text("주간 PTSD 위험 변화",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            child: Text(
+              "주간 PTSD 위험 변화",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
           ),
 
           const SizedBox(height: 20),
@@ -198,10 +189,7 @@ class _ReportScreenState extends State<ReportScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 16),
-      ),
+      child: Text(text, style: const TextStyle(fontSize: 16)),
     );
   }
 
@@ -219,8 +207,10 @@ class _ReportScreenState extends State<ReportScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("상담 기록",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            "상담 기록",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 16),
 
           Container(
@@ -242,15 +232,23 @@ class _ReportScreenState extends State<ReportScreen> {
                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("2025.10.14",
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600)),
+                    Text(
+                      "2025.10.14",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     SizedBox(height: 6),
-                    Text("PTSD 위험 상담",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text(
+                      "PTSD 위험 상담",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),
