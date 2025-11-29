@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:frontend/common_widgets/primary_button.dart';
 
 class SurveyJobScreen extends StatefulWidget {
-  const SurveyJobScreen({super.key});
+  final String? userName; // 사용자 이름
+
+  const SurveyJobScreen({super.key, this.userName});
 
   @override
   State<SurveyJobScreen> createState() => _SurveyJobScreenState();
@@ -14,9 +16,10 @@ class _SurveyJobScreenState extends State<SurveyJobScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
         elevation: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFFFFFF),
         foregroundColor: Colors.black,
       ),
       body: Padding(
@@ -26,9 +29,9 @@ class _SurveyJobScreenState extends State<SurveyJobScreen> {
           children: [
             const SizedBox(height: 20),
 
-            const Text(
-              "강민님의\n직업을 선택해주세요",
-              style: TextStyle(
+            Text(
+              "${widget.userName ?? '강민'}님의\n직업을 선택해주세요",
+              style: const TextStyle(
                 fontSize: 34,
                 height: 1.2,
                 fontWeight: FontWeight.w700,
@@ -90,21 +93,73 @@ class _SurveyJobScreenState extends State<SurveyJobScreen> {
     required Color color,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return _JobItemWidget(
+      label: label,
+      image: image,
+      selected: selected,
+      color: color,
       onTap: onTap,
-      child: Column(
-        children: [
-          Image.asset(image, width: 140),
-          const SizedBox(height: 10),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: color,
+    );
+  }
+}
+
+class _JobItemWidget extends StatefulWidget {
+  final String label;
+  final String image;
+  final bool selected;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _JobItemWidget({
+    required this.label,
+    required this.image,
+    required this.selected,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  State<_JobItemWidget> createState() => _JobItemWidgetState();
+}
+
+class _JobItemWidgetState extends State<_JobItemWidget> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedScale(
+          scale: _isHovered ? 1.3 : 1.0,
+          duration: const Duration(milliseconds: 200),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: (_isHovered || widget.selected)
+                  ? const Color(0xFFABC7D0)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              children: [
+                Image.asset(widget.image, width: 140),
+                const SizedBox(height: 10),
+                Text(
+                  widget.label,
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: widget.color,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

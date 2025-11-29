@@ -65,10 +65,14 @@ class _SurveyInfoScreenState extends State<SurveyInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 직업에 따른 색상
+    final Color titleColor = job == "police" ? Colors.blue : Colors.orange;
+
     return Scaffold(
+      backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
         elevation: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFFFFFF),
         foregroundColor: Colors.black,
       ),
       body: Padding(
@@ -94,6 +98,7 @@ class _SurveyInfoScreenState extends State<SurveyInfoScreen> {
               title: "출동시간",
               value: time,
               items: timeItems,
+              titleColor: titleColor,
               onChanged: (val) => setState(() => time = val!),
             ),
 
@@ -101,6 +106,7 @@ class _SurveyInfoScreenState extends State<SurveyInfoScreen> {
               title: "분류",
               value: type,
               items: typeItems,
+              titleColor: titleColor,
               onChanged: (val) => setState(() => type = val!),
             ),
 
@@ -108,6 +114,7 @@ class _SurveyInfoScreenState extends State<SurveyInfoScreen> {
               title: "현장",
               value: location,
               items: locationItems,
+              titleColor: titleColor,
               onChanged: (val) => setState(() => location = val!),
             ),
 
@@ -131,6 +138,7 @@ class _SurveyInfoScreenState extends State<SurveyInfoScreen> {
     required String title,
     required String value,
     required List<String> items,
+    required Color titleColor,
     required ValueChanged<String?> onChanged,
   }) {
     return Padding(
@@ -140,9 +148,9 @@ class _SurveyInfoScreenState extends State<SurveyInfoScreen> {
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 22,
-              color: Colors.blue,
+              color: titleColor,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -159,8 +167,13 @@ class _SurveyInfoScreenState extends State<SurveyInfoScreen> {
                 value: value,
                 items: items
                     .map(
-                      (item) =>
-                          DropdownMenuItem(value: item, child: Text(item)),
+                      (item) => DropdownMenuItem(
+                        value: item,
+                        child: _HoverableDropdownItem(
+                          text: item,
+                          hoverColor: titleColor.withOpacity(0.1),
+                        ),
+                      ),
                     )
                     .toList(),
                 onChanged: onChanged,
@@ -168,6 +181,32 @@ class _SurveyInfoScreenState extends State<SurveyInfoScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _HoverableDropdownItem extends StatefulWidget {
+  final String text;
+  final Color hoverColor;
+
+  const _HoverableDropdownItem({required this.text, required this.hoverColor});
+
+  @override
+  State<_HoverableDropdownItem> createState() => _HoverableDropdownItemState();
+}
+
+class _HoverableDropdownItemState extends State<_HoverableDropdownItem> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: Container(
+        color: _isHovered ? widget.hoverColor : Colors.transparent,
+        child: Text(widget.text),
       ),
     );
   }

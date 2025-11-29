@@ -7,9 +7,10 @@ class SurveyFaceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
         elevation: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFFFFFF),
         foregroundColor: Colors.black,
       ),
       body: Padding(
@@ -19,10 +20,7 @@ class SurveyFaceScreen extends StatelessWidget {
           children: [
             const Text(
               "음성/얼굴 인식",
-              style: TextStyle(
-                fontSize: 34,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 16),
@@ -35,10 +33,7 @@ class SurveyFaceScreen extends StatelessWidget {
             const SizedBox(height: 60),
 
             Center(
-              child: Image.asset(
-                "assets/images/face_icon.png",
-                width: 240,
-              ),
+              child: Image.asset("assets/images/face_icon.png", width: 240),
             ),
 
             const Spacer(),
