@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/common_widgets/primary_button.dart';
 import 'package:frontend/features/auth/widgets/auth_text_field.dart';
 import 'signup_success_screen.dart';
+import 'auth_api.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -15,6 +16,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final email = TextEditingController();
   final password = TextEditingController();
   final confirm = TextEditingController();
+
+  bool _submitting = false;
 
   String? emailError;
   String? passwordError;
@@ -138,14 +141,34 @@ class _SignupScreenState extends State<SignupScreen> {
               child: PrimaryButton(
                 text: "완료",
                 backgroundColor: buttonColor,
-                onPressed: () {
-                  if (validate()) {
+                disabled: _submitting,
+                onPressed: () async {
+                  if (!validate()) return;
+
+                  setState(() => _submitting = true);
+                  try {
+                    await AuthApi.signUp(
+                      email: email.text.trim(),
+                      password: password.text,
+                      passwordCheck: confirm.text,
+                    );
+
+                    if (!mounted) return;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) => const SignupSuccessScreen(),
                       ),
                     );
+                  } catch (e) {
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(e.toString())));
+                  } finally {
+                    if (mounted) {
+                      setState(() => _submitting = false);
+                    }
                   }
                 },
               ),

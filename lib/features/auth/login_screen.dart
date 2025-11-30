@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/common_widgets/primary_button.dart';
 import 'package:frontend/features/auth/widgets/auth_text_field.dart';
 import 'signup_screen.dart';
+import 'auth_api.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,6 +14,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final email = TextEditingController();
   final password = TextEditingController();
+
+  bool _loggingIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +62,31 @@ class _LoginScreenState extends State<LoginScreen> {
               PrimaryButton(
                 text: "완료",
                 backgroundColor: Colors.black,
-                onPressed: () {
-                  // TODO: 로그인 API 연동
+                disabled: _loggingIn,
+                onPressed: () async {
+                  setState(() => _loggingIn = true);
+                  try {
+                    final token = await AuthApi.login(
+                      email: email.text.trim(),
+                      password: password.text,
+                    );
+
+                    if (!mounted) return;
+                    // TODO: 토큰을 secure storage 등에 저장 후 다음 화면으로 이동
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(const SnackBar(content: Text('로그인 성공')));
+                    debugPrint('로그인 토큰: $token');
+                  } catch (e) {
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(e.toString())));
+                  } finally {
+                    if (mounted) {
+                      setState(() => _loggingIn = false);
+                    }
+                  }
                 },
               ),
               const SizedBox(height: 12),
