@@ -8,6 +8,7 @@ class AuthApi {
   /// - 안드로이드 에뮬레이터: http://10.0.2.2:8080
   /// - iOS 시뮬레이터 / 웹: http://localhost:8080 또는 서버 IP
   static const String _baseUrl = 'http://10.0.2.2:8080';
+  // static const String _baseUrl = 'http://localhost:8080';
 
   /// 회원가입
   /// POST /api/user/signup

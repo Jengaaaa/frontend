@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/common_widgets/primary_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:mic_stream/mic_stream.dart' as mic;
+// import 'package:mic_stream/mic_stream.dart' as mic;
 
 class SurveyCameraScreen extends StatefulWidget {
   const SurveyCameraScreen({super.key});
@@ -85,7 +85,7 @@ class _SurveyCameraScreenState extends State<SurveyCameraScreen> {
       (_) => _captureAndSendFrame(),
     );
 
-    _startAudioStream();
+    // _startAudioStream(); // 마이크 스트림 비활성화
     _startResultPolling();
   }
 
@@ -140,50 +140,51 @@ class _SurveyCameraScreenState extends State<SurveyCameraScreen> {
     await request.send();
   }
 
-  Future<void> _startAudioStream() async {
-    try {
-      final stream = await mic.MicStream.microphone(
-        audioSource: mic.AudioSource.DEFAULT,
-        sampleRate: 16000,
-        channelConfig: mic.ChannelConfig.CHANNEL_IN_MONO,
-        audioFormat: mic.AudioFormat.ENCODING_PCM_16BIT,
-      );
-
-      const chunkMs = 150;
-      const sampleRate = 16000;
-      const bytesPerSample = 2; // 16bit PCM
-      final samplesPerChunk = sampleRate * chunkMs ~/ 1000;
-      final bytesPerChunk = samplesPerChunk * bytesPerSample;
-
-      List<int> buffer = [];
-      _audioSub?.cancel();
-      _audioSub = stream.listen((List<int> data) {
-        buffer.addAll(data);
-        while (buffer.length >= bytesPerChunk && _recording) {
-          final chunk = buffer.sublist(0, bytesPerChunk);
-          buffer = buffer.sublist(bytesPerChunk);
-          _sendAudioChunk(chunk);
-        }
-      });
-    } catch (e) {
-      // 마이크 초기화 실패는 데모에서는 무시
-    }
-  }
-
-  Future<void> _sendAudioChunk(List<int> pcmBytes) async {
-    final uri = Uri.parse("$_baseUrl/realtime/audio");
-    final request = http.MultipartRequest('POST', uri)
-      ..fields['user_id'] = _userId
-      ..files.add(
-        http.MultipartFile.fromBytes(
-          'audio_chunk',
-          pcmBytes,
-          filename: 'chunk.pcm',
-          contentType: MediaType('application', 'octet-stream'),
-        ),
-      );
-    await request.send();
-  }
+  // 마이크 스트리밍 기능은 현재 사용하지 않으므로 비활성화
+  // Future<void> _startAudioStream() async {
+  //   try {
+  //     final stream = mic.MicStream.microphone(
+  //       audioSource: mic.AudioSource.DEFAULT,
+  //       sampleRate: 16000,
+  //       channelConfig: mic.ChannelConfig.CHANNEL_IN_MONO,
+  //       audioFormat: mic.AudioFormat.ENCODING_PCM_16BIT,
+  //     );
+  //
+  //     const chunkMs = 150;
+  //     const sampleRate = 16000;
+  //     const bytesPerSample = 2; // 16bit PCM
+  //     final samplesPerChunk = sampleRate * chunkMs ~/ 1000;
+  //     final bytesPerChunk = samplesPerChunk * bytesPerSample;
+  //
+  //     List<int> buffer = [];
+  //     _audioSub?.cancel();
+  //     _audioSub = stream.listen((List<int> data) {
+  //       buffer.addAll(data);
+  //       while (buffer.length >= bytesPerChunk && _recording) {
+  //         final chunk = buffer.sublist(0, bytesPerChunk);
+  //         buffer = buffer.sublist(bytesPerChunk);
+  //         _sendAudioChunk(chunk);
+  //       }
+  //     });
+  //   } catch (e) {
+  //     // 마이크 초기화 실패는 데모에서는 무시
+  //   }
+  // }
+  //
+  // Future<void> _sendAudioChunk(List<int> pcmBytes) async {
+  //   final uri = Uri.parse("$_baseUrl/realtime/audio");
+  //   final request = http.MultipartRequest('POST', uri)
+  //     ..fields['user_id'] = _userId
+  //     ..files.add(
+  //       http.MultipartFile.fromBytes(
+  //         'audio_chunk',
+  //         pcmBytes,
+  //         filename: 'chunk.pcm',
+  //         contentType: MediaType('application', 'octet-stream'),
+  //       ),
+  //     );
+  //   await request.send();
+  // }
 
   void _startResultPolling() {
     _resultTimer?.cancel();

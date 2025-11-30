@@ -27,7 +27,7 @@ class AuthTextField extends StatelessWidget {
         ? (errorBorderColor ?? Colors.red)
         : borderColor;
 
-    OutlineInputBorder _outlined(Color color) {
+    OutlineInputBorder outlined(Color color) {
       return OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: color, width: 1.5),
@@ -45,8 +45,8 @@ class AuthTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             errorText: errorText,
-            enabledBorder: _outlined(effectiveBorderColor),
-            focusedBorder: _outlined(effectiveBorderColor),
+            enabledBorder: outlined(effectiveBorderColor),
+            focusedBorder: outlined(effectiveBorderColor),
           ),
         ),
         const SizedBox(height: 16),
