@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common_widgets/primary_button.dart';
 import 'package:frontend/features/auth/login_screen.dart';
+import 'package:frontend/features/auth/auth_api.dart';
 
 class SurveyJobScreen extends StatefulWidget {
   final String? userName; // 사용자 이름
+  final int? userId; // 1단계 회원가입에서 발급된 사용자 ID
 
-  const SurveyJobScreen({super.key, this.userName});
+  const SurveyJobScreen({super.key, this.userName, this.userId});
 
   @override
   State<SurveyJobScreen> createState() => _SurveyJobScreenState();
@@ -70,15 +72,31 @@ class _SurveyJobScreenState extends State<SurveyJobScreen> {
             PrimaryButton(
               text: "다음",
               disabled: selectedJob == null,
-              onPressed: () {
+              onPressed: () async {
                 if (selectedJob == null) return;
-                // 직군 선택 후 로그인 화면으로 이동하면서 선택한 직군을 전달
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => LoginScreen(job: selectedJob),
-                  ),
-                );
+                try {
+                  // userId가 있을 경우에만 2단계 회원가입 API 호출
+                  if (widget.userId != null) {
+                    await AuthApi.selectJob(
+                      userId: widget.userId!,
+                      job: selectedJob!,
+                    );
+                  }
+
+                  if (!mounted) return;
+                  // 직군 선택 후 로그인 화면으로 이동하면서 선택한 직군을 전달
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => LoginScreen(job: selectedJob),
+                    ),
+                  );
+                } catch (e) {
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(e.toString())),
+                  );
+                }
               },
             ),
 

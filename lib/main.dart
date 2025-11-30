@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       home: const WelcomeScreen(),
+      // home: const SurveyInfoScreen(),
       routes: {
         // 인증 / 진입
         '/login': (context) => const LoginScreen(),

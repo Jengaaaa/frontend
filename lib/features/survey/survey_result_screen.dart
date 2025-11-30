@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common_widgets/primary_button.dart';
+import 'package:frontend/features/home/home_screen.dart';
 
 class SurveyResultScreen extends StatelessWidget {
   final double? score;
   final String? level;
 
-  const SurveyResultScreen({
-    super.key,
-    this.score,
-    this.level,
-  });
+  const SurveyResultScreen({super.key, this.score, this.level});
 
   @override
   Widget build(BuildContext context) {
-    final String scoreText =
-        score != null ? score!.toStringAsFixed(2) : "분석 중";
+    final String scoreText = score != null ? score!.toStringAsFixed(2) : "분석 중";
     final String levelText = level ?? "";
 
     return Scaffold(
@@ -36,19 +32,12 @@ class SurveyResultScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 30),
-            const Icon(
-              Icons.insights,
-              color: Color(0xFFABC7D0),
-              size: 80,
-            ),
+            const Icon(Icons.insights, color: Color(0xFFABC7D0), size: 80),
             const SizedBox(height: 20),
             const Text(
               "당신의 오늘 컨디션을 분석했어요",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
             Container(
@@ -62,10 +51,7 @@ class SurveyResultScreen extends StatelessWidget {
                 children: [
                   const Text(
                     "스트레스 지수",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -119,8 +105,11 @@ class SurveyResultScreen extends StatelessWidget {
             PrimaryButton(
               text: "홈으로 돌아가기",
               onPressed: () {
-                // 스택을 처음까지 비우고 첫 화면(홈)으로 복귀
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                // 모든 이전 화면을 제거하고 홈 화면으로 이동
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const HomeScreen()),
+                  (route) => false,
+                );
               },
             ),
             const SizedBox(height: 20),
@@ -130,5 +119,3 @@ class SurveyResultScreen extends StatelessWidget {
     );
   }
 }
-
-

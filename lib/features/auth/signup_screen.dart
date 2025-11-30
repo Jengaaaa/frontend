@@ -150,23 +150,29 @@ class _SignupScreenState extends State<SignupScreen> {
                 backgroundColor: buttonColor,
                 disabled: _submitting,
                 onPressed: () async {
-                  if (!validate()) return;
+                  debugPrint('signup 버튼 눌림');
+                  final v = validate();
+                  debugPrint('validate 결과: $v');
+                  if (!v) return;
 
                   setState(() => _submitting = true);
                   try {
-                    await AuthApi.signUp(
+                    final result = await AuthApi.signUp(
+                      name: name.text.trim(),
                       email: email.text.trim(),
                       password: password.text,
                       passwordCheck: confirm.text,
                     );
 
                     if (!mounted) return;
-                    // 회원가입 성공 후 직군 선택 화면으로 이동하면서 이름 전달
+                    // 회원가입 성공 후 직군 선택 화면으로 이동하면서 이름과 userId 전달
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>
-                            SurveyJobScreen(userName: name.text.trim()),
+                        builder: (_) => SurveyJobScreen(
+                          userName: name.text.trim(),
+                          userId: result.userId,
+                        ),
                       ),
                     );
                   } catch (e) {
