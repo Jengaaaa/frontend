@@ -38,7 +38,6 @@ dependencies:
   url_launcher: ^6.3.0
   camera: ^0.10.0
   http: ^0.13.6
-  mic_stream: ^0.7.1
 
 dev_dependencies:
   flutter_test:

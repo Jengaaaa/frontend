@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/features/screens/welcome_screen.dart';
 import 'package:frontend/features/survey/survey_job_screen.dart';
 import 'package:frontend/features/survey/survey_info_screen.dart';
 import 'package:frontend/features/survey/survey_face_screen.dart';
 import 'package:frontend/features/survey/survey_camera_screen.dart';
+import 'package:frontend/features/screens/welcome_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      // home: const WelcomeScreen(),
-      home: const SurveyJobScreen(),
+      home: const WelcomeScreen(),
+      // home: const SurveyJobScreen(),/
       // home: const HomeScreen(),
       routes: {
         '/survey-camera': (context) => const SurveyCameraScreen(),
