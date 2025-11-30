@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:frontend/features/screens/welcome_screen.dart';
+import 'package:frontend/features/screens/welcome_screen.dart';
 import 'package:frontend/features/survey/survey_job_screen.dart';
 import 'package:frontend/features/survey/survey_info_screen.dart';
 import 'package:frontend/features/survey/survey_face_screen.dart';
