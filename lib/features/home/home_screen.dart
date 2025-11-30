@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:frontend/common_widgets/bottom_nav.dart';
+import 'package:frontend/common_widgets/primary_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   final String job; // "police" or "fire"
@@ -60,6 +61,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Meditation Section
             _buildMeditationSection(),
+
+            const SizedBox(height: 20),
+
+            // 분석하기 버튼
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: PrimaryButton(
+                text: "분석하기",
+                onPressed: () {
+                  // 현재 직군 정보를 설문 플로우로 전달
+                  Navigator.pushNamed(
+                    context,
+                    "/survey-info",
+                    arguments: widget.job,
+                  );
+                },
+              ),
+            ),
 
             const SizedBox(height: 20),
 

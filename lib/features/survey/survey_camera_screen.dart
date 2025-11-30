@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/common_widgets/primary_button.dart';
+import 'package:frontend/features/survey/survey_result_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 // import 'package:mic_stream/mic_stream.dart' as mic;
@@ -91,7 +92,13 @@ class _SurveyCameraScreenState extends State<SurveyCameraScreen> {
 
   void _proceedNext() {
     _stopStreaming();
-    // TODO: 서버 업로드 흐름 등 다음 단계 or 결과 요약 화면 이동
+    // 분석이 끝난 뒤 결과 화면으로 이동
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SurveyResultScreen(score: _score, level: _level),
+      ),
+    );
   }
 
   @override

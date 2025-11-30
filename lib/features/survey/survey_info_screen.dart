@@ -74,6 +74,7 @@ class _SurveyInfoScreenState extends State<SurveyInfoScreen> {
         elevation: 1,
         backgroundColor: const Color(0xFFFFFFFF),
         foregroundColor: Colors.black,
+        automaticallyImplyLeading: false, // 이전(백) 버튼 제거
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
