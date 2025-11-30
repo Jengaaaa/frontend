@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common_widgets/primary_button.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
+
+
 
 class SurveyFaceScreen extends StatefulWidget {
   const SurveyFaceScreen({super.key});
@@ -39,15 +42,28 @@ class _SurveyFaceScreenState extends State<SurveyFaceScreen> {
     });
   }
 
-  void _goToCameraPage() {
-    if (!_cameraGranted || !_microphoneGranted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("카메라와 마이크 권한을 먼저 허용해주세요.")));
-      return;
-    }
-    Navigator.pushNamed(context, '/survey-camera');
+void _goToCameraPage() async {
+  if (!_cameraGranted || !_microphoneGranted) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text("카메라와 마이크 권한을 먼저 허용해주세요.")));
+    return;
   }
+
+  // 🔥 FastAPI에 세션 초기화 요청
+  try {
+    final uri = Uri.parse("http://10.0.2.2:8000/realtime/init?user_id=demo-user");
+    await http.post(uri);
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("서버 초기화 실패: 서버가 켜져 있나요?")),
+    );
+    return;
+  }
+
+  // 🔥 녹화 화면으로 이동
+  Navigator.pushNamed(context, '/survey-camera');
+}
+
 
   @override
   void dispose() {

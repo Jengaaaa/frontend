@@ -28,7 +28,7 @@ class _SurveyCameraScreenState extends State<SurveyCameraScreen> {
   double? _score;
   String? _level;
 
-  static const String _baseUrl = "https://your-server.com"; // TODO: 변경
+  static const String _baseUrl = "http://10.0.2.2:8000"; // TODO: 변경
   static const String _userId = "demo-user"; // TODO: 실제 사용자 ID로 교체
 
   @override
