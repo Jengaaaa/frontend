@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/auth/login_screen.dart';
+import 'package:frontend/features/home/home_screen.dart';
 import 'package:frontend/features/survey/survey_job_screen.dart';
 import 'package:frontend/features/survey/survey_info_screen.dart';
 import 'package:frontend/features/survey/survey_face_screen.dart';
@@ -37,13 +39,18 @@ class MyApp extends StatelessWidget {
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       home: const WelcomeScreen(),
-      // home: const SurveyJobScreen(),/
-      // home: const HomeScreen(),
       routes: {
-        '/survey-camera': (context) => const SurveyCameraScreen(),
+        // 인증 / 진입
+        '/login': (context) => const LoginScreen(),
+
+        // 설문 / 분석 플로우
         '/survey-job': (context) => const SurveyJobScreen(),
         '/survey-info': (context) => const SurveyInfoScreen(),
         '/survey-face': (context) => const SurveyFaceScreen(),
+        '/survey-camera': (context) => const SurveyCameraScreen(),
+
+        // 기본 홈 화면 (직군/job은 LoginScreen에서 전달)
+        '/home': (context) => const HomeScreen(),
       },
     );
   }

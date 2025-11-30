@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common_widgets/primary_button.dart';
 import 'package:frontend/features/auth/widgets/auth_text_field.dart';
-import 'signup_success_screen.dart';
+import 'package:frontend/features/survey/survey_job_screen.dart';
 import 'auth_api.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -107,6 +107,13 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   children: [
                     AuthTextField(
+                      label: "이름",
+                      hint: "이름",
+                      controller: name,
+                      borderColor: strokeColor,
+                      errorBorderColor: strokeColor,
+                    ),
+                    AuthTextField(
                       label: "이메일",
                       hint: "이메일",
                       controller: email,
@@ -154,10 +161,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     );
 
                     if (!mounted) return;
-                    Navigator.push(
+                    // 회원가입 성공 후 직군 선택 화면으로 이동하면서 이름 전달
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const SignupSuccessScreen(),
+                        builder: (_) =>
+                            SurveyJobScreen(userName: name.text.trim()),
                       ),
                     );
                   } catch (e) {

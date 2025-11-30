@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common_widgets/primary_button.dart';
 import 'package:frontend/features/auth/widgets/auth_text_field.dart';
+import 'package:frontend/features/home/home_screen.dart';
 import 'signup_screen.dart';
 import 'auth_api.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String? job; // 'police' 또는 'firefighter'
+
+  const LoginScreen({super.key, this.job});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -72,11 +75,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
 
                     if (!mounted) return;
-                    // TODO: 토큰을 secure storage 등에 저장 후 다음 화면으로 이동
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(const SnackBar(content: Text('로그인 성공')));
+                    // TODO: 토큰을 secure storage 등에 저장
                     debugPrint('로그인 토큰: $token');
+
+                    // 선택된 직군에 따라 홈 화면으로 이동
+                    final job = widget.job ?? 'police';
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => HomeScreen(job: job),
+                      ),
+                    );
                   } catch (e) {
                     if (!mounted) return;
                     ScaffoldMessenger.of(

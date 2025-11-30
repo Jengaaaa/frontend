@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common_widgets/primary_button.dart';
+import 'package:frontend/features/auth/login_screen.dart';
 
 class SurveyJobScreen extends StatefulWidget {
   final String? userName; // 사용자 이름
@@ -71,10 +72,12 @@ class _SurveyJobScreenState extends State<SurveyJobScreen> {
               disabled: selectedJob == null,
               onPressed: () {
                 if (selectedJob == null) return;
-                Navigator.pushNamed(
+                // 직군 선택 후 로그인 화면으로 이동하면서 선택한 직군을 전달
+                Navigator.pushReplacement(
                   context,
-                  "/survey-info",
-                  arguments: selectedJob, // 'police' 또는 'firefighter'
+                  MaterialPageRoute(
+                    builder: (_) => LoginScreen(job: selectedJob),
+                  ),
                 );
               },
             ),
